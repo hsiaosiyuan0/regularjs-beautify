@@ -97,7 +97,7 @@ export class Token {
   loc: SourceLoc;
   value: string;
 
-  constructor(kind: TokKind, loc: SourceLoc) {
+  constructor(kind: TokKind, loc: SourceLoc = new SourceLoc()) {
     this.kind = kind;
     this.loc = loc;
     this.value = "";
@@ -203,5 +203,3 @@ export class Token {
     return tok;
   }
 }
-
-export const tokEos = new Token(TokKind.EOS, new SourceLoc());

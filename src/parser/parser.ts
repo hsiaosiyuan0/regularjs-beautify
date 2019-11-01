@@ -1,5 +1,5 @@
 import { Lexer } from "./lexer";
-import { TokKind, Token, Sign, tokEos } from "./token";
+import { TokKind, Token, Sign } from "./token";
 import {
   Node,
   TagStatement,
@@ -43,7 +43,7 @@ export class Parser {
 
   constructor(lexer: Lexer) {
     this.lexer = lexer;
-    this.tok = tokEos;
+    this.tok = new Token(TokKind.EOS);
   }
 
   get src() {
@@ -443,6 +443,7 @@ export class Parser {
   parseTextElement(tok: Token) {
     const cs: string[] = [tok.value];
     while (true) {
+      if (this.aheadIsEos()) break;
       const c = this.src.peek();
       if (c === "<" || this.aheadIsExprBegin()) {
         cs.push(this.lexer.skipWhitespace());

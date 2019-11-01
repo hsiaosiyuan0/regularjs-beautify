@@ -1,6 +1,7 @@
 import { Lexer, Source, Parser } from "./parser";
 import { inspect } from "util";
 import { writeFileSync } from "fs";
+import { Formatter, print } from "./visitor";
 
 // const code = `
 // <!-- @regular -->
@@ -57,15 +58,31 @@ code = `
 `;
 
 code = `
-{'add: ' + (a + b | join: '+')}
+{addEventListener(aaaaa,bbbb,cccc,dddd,eeee,fffff,ggggg,hhhh,iiiii,jjjjjj,kkkk) + addEventListener(aaaa, bbb)}
 `;
 
-const src = new Source(code);
-const lexer = new Lexer(src);
-const parser = new Parser(lexer);
+// code = `
+// {addEventListener( addEventListener(aaaaa,bbbb, cccc, dddd, eeee, fffff, ggggg, hhhh, iiiii, jjjjjj, kkkk), bbbb, cccc, dddd, eeee, fffff, ggggg, hhhh, iiiii, jjjjjj, kkkk) + addEventListener(aaaaa, bbbb, cccc, dddd, eeee, fffff, ggggg, hhhh, iiiii, jjjjjj, kkkk)}
+// `;
 
+// code = `
+// {addEventListener( addEventListener(aaaaa,bbbb, cccc, dddd, eeee, fffff, ggggg, hhhh, iiiii, jjjjjj, kkkk), bbbb, cccc, dddd, eeee, fffff, ggggg, hhhh, iiiii, jjjjjj, kkkk) + a(b)}
+// `;
+
+// const src = new Source(code);
+// const lexer = new Lexer(src);
+// const parser = new Parser(lexer);
+
+const formatter = new Formatter(code);
 // for (const tok of lexer) {
 //   console.log(tok);
 // }
 
-writeFileSync("test.json", inspect(parser.parseProg(), true, null));
+// writeFileSync("test.json", inspect(parser.parseProg(), true, null));
+
+console.log(print(formatter.run()));
+// console.log(formatter.lines);
+
+// addEventListener(aaaaa,bbbb,cccc,dddd,eeee,fffff,ggggg,hhhh,iiiii,jjjjjj,kkkk) + addEventListener(aaaa, bbb);
+
+// aaaaa + bbbb + cccc + dddd + eeee+ fffff+ggggg+ hhhh+ iiiii+ jjjjjj+ kkkk+lllll+mmmmm+nnnnn;

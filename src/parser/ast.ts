@@ -20,6 +20,7 @@ export enum NodeType {
   ObjectExpr,
   ParenExpr,
   TernaryExpr,
+  PipeExpr,
 
   Prog,
   IfStmt,
@@ -90,7 +91,7 @@ export class ArrayExpr extends Expression {
   elements: Expression[];
 
   constructor(loc: SourceLoc, elements: Expression[] = []) {
-    super(NodeType.Identifier, loc);
+    super(NodeType.ArrayExpr, loc);
     this.elements = elements;
   }
 }
@@ -99,7 +100,7 @@ export class ObjectExpr extends Expression {
   properties: ObjectProperty[];
 
   constructor(loc: SourceLoc, properties: ObjectProperty[] = []) {
-    super(NodeType.Identifier, loc);
+    super(NodeType.ObjectExpr, loc);
     this.properties = properties;
   }
 }
@@ -113,7 +114,9 @@ export class StringLiteral extends Expression {
   }
 }
 
-export class NumberLiteral extends Expression {
+export class Literal extends Expression {}
+
+export class NumberLiteral extends Literal {
   value: string;
 
   constructor(loc: SourceLoc, value: string) {
@@ -122,7 +125,7 @@ export class NumberLiteral extends Expression {
   }
 }
 
-export class BooleanLiteral extends Expression {
+export class BooleanLiteral extends Literal {
   value: string;
 
   constructor(loc: SourceLoc, value: string) {
@@ -131,7 +134,7 @@ export class BooleanLiteral extends Expression {
   }
 }
 
-export class NullLiteral extends Expression {
+export class NullLiteral extends Literal {
   value: string;
 
   constructor(loc: SourceLoc, value: string) {
@@ -140,7 +143,7 @@ export class NullLiteral extends Expression {
   }
 }
 
-export class UndefinedLiteral extends Expression {
+export class UndefLiteral extends Literal {
   value: string;
 
   constructor(loc: SourceLoc, value: string) {
@@ -267,7 +270,7 @@ export class PipeExpression extends Expression {
     name: string,
     args: Expression[] = []
   ) {
-    super(NodeType.TernaryExpr, loc);
+    super(NodeType.PipeExpr, loc);
     this.expr = expr;
     this.name = name;
     this.args = args;

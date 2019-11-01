@@ -1,5 +1,5 @@
 import { Source, EOL, SourceLoc, Position, EOS } from "./source";
-import { Token, isKeyword, TokKind, tokEos } from "./token";
+import { Token, isKeyword, TokKind } from "./token";
 
 export class Lexer {
   src: Source;
@@ -20,7 +20,7 @@ export class Lexer {
 
   next(skipWhitespace = true): Token {
     if (skipWhitespace) this.skipWhitespace();
-    if (this.aheadIsEos()) return tokEos;
+    if (this.aheadIsEos()) return new Token(TokKind.EOS);
     if (this.aheadIsIdStart()) return this.readId();
     if (this.aheadIsNumericStart()) return this.readNumeric();
     if (this.aheadIsStringStart()) return this.readString();
@@ -287,6 +287,7 @@ export class Lexer {
     const cs: string[] = [];
     let prev = "";
     while (true) {
+      if (this.aheadIsEos()) break;
       const c = this.src.peek();
       if (c === "<") {
         break;
