@@ -94,20 +94,6 @@ export class Formatter extends AstVisitor {
     return shrinkLines(this, this.lines);
   }
 
-  //   get lastLineWidth() {
-  //     const last = this.lines[this.lines.length - 1] || "";
-  //     return last.length;
-  //   }
-
-  //   append(text: string) {
-  //     const lines = text.split(EOL);
-  //     const remain = lines.shift();
-  //     if (this.lines.length) {
-  //       this.lines[this.lines.length - 1] += remain;
-  //     }
-  //     this.lines = this.lines.concat(lines);
-  //   }
-
   visitProg(node: Prog) {
     return this.visitStmts(node.body);
   }
@@ -309,7 +295,7 @@ export const shrinkLines = (formatter: Formatter, lines: Line[]) => {
     for (let i = 0; i < work.length; i++) {
       const line = work[i];
       if (line.fine) continue;
-      line.fine = line.text.length < 20;
+      line.fine = line.text.length < formatter.options.printWidth;
       if (line.fine) continue;
 
       const newLines = shrink(formatter, line);
@@ -328,7 +314,10 @@ export const shrinkLines = (formatter: Formatter, lines: Line[]) => {
       const afterLine = lastNewLine.next;
       if (lastNode instanceof Token && lastNode.isBin() && afterLine) {
         const last = newLines[newLines.length - 1].text;
-        if (last.length + afterLine.text.length < 20) {
+        if (
+          last.length + afterLine.text.length <
+          formatter.options.printWidth
+        ) {
           lastNewLine.text += " " + afterLine.text;
           lastNewLine.nodes = lastNewLine.nodes.concat(afterLine.nodes);
           // since append the text of `afterLine` to the end of `lastNewLine` so
