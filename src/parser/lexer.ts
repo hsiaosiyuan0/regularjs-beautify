@@ -325,19 +325,19 @@ export class Lexer {
 }
 
 export function isSpace(c: string) {
-  return c == " ";
+  return c === " ";
 }
 
 export function isNewline(c: string) {
-  return c == EOL;
+  return c === EOL;
 }
 
 export function isSpaceOrTab(c: string) {
-  return isSpace(c) || c == "\t";
+  return isSpace(c) || c === "\t";
 }
 
 export function isWhitespace(c: string) {
-  return isSpace(c) || isNewline(c) || c == "\t";
+  return isSpace(c) || isNewline(c) || c === "\t";
 }
 
 export function isLetter(c: string) {
@@ -345,7 +345,7 @@ export function isLetter(c: string) {
 }
 
 export function isIdStart(c: string) {
-  return isLetter(c) || c == "_";
+  return isLetter(c) || c === "_" || c === "$";
 }
 
 export function isDigit(c: string) {
@@ -361,7 +361,8 @@ export function isIdPart(c: string) {
 }
 
 export function isNamePart(c: string) {
-  return c === "." || c === "-";
+  // TODO: supports `.`
+  return c === "-";
 }
 
 // prettier-ignore

@@ -21,6 +21,7 @@ export enum NodeType {
   ParenExpr,
   TernaryExpr,
   PipeExpr,
+  OnceExpr,
 
   Prog,
   IfStmt,
@@ -65,9 +66,7 @@ export class Statement extends Node {
     this.body = [];
   }
 }
-export class Expression extends Node {
-  isOnce = false;
-}
+export class Expression extends Node {}
 
 export class Prog extends Statement {
   body: Statement[];
@@ -233,11 +232,11 @@ export class ObjectExpression extends Expression {
 }
 
 export class ParenExpression extends Expression {
-  expr: Expression;
+  exprs: Expression[];
 
-  constructor(loc: SourceLoc, expr: Expression) {
-    super(NodeType.ObjectExpr, loc);
-    this.expr = expr;
+  constructor(loc: SourceLoc, exprs: Expression[]) {
+    super(NodeType.ParenExpr, loc);
+    this.exprs = exprs;
   }
 }
 
@@ -274,6 +273,15 @@ export class PipeExpression extends Expression {
     this.expr = expr;
     this.name = name;
     this.args = args;
+  }
+}
+
+export class OnceExpression extends Expression {
+  expr: Expression;
+
+  constructor(loc: SourceLoc, expr: Expression) {
+    super(NodeType.OnceExpr, loc);
+    this.expr = expr;
   }
 }
 

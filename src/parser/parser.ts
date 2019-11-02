@@ -9,7 +9,7 @@ import {
   NumberLiteral,
   BooleanLiteral,
   NullLiteral,
-  UndefinedLiteral,
+  UndefLiteral,
   Expression,
   CallExpression,
   MemberExpression,
@@ -34,7 +34,8 @@ import {
   PipeExpression,
   ArrayExpr,
   ObjectExpr,
-  ObjectProperty
+  ObjectProperty,
+  OnceExpression
 } from "./ast";
 
 export class Parser {
@@ -109,6 +110,8 @@ export class Parser {
     if (this.aheadIsSign(Sign.Colon)) {
       this.lexer.next();
       while (true) {
+        if (this.aheadIsEos()) break;
+
         node.args.push(this.parseTernaryExpr());
         if (this.aheadIsSign(Sign.Comma)) {
           this.next();
@@ -122,12 +125,11 @@ export class Parser {
     return this.parsePipeExpr();
   }
 
-  parseExprOnce() {
+  parseExprOnce(tok: Token) {
     this.nextMustSign("(");
     const expr = this.parseExpr();
-    expr.isOnce = true;
     this.nextMustSign(")");
-    return expr;
+    return this.finNode(new OnceExpression(tok.loc, expr));
   }
 
   raiseErr(tok: Token): never {
@@ -150,7 +152,7 @@ export class Parser {
       case TokKind.Null:
         return new NullLiteral(tok.loc, tok.value);
       case TokKind.Undef:
-        return new UndefinedLiteral(tok.loc, tok.value);
+        return new UndefLiteral(tok.loc, tok.value);
       case TokKind.Identifier: {
         let node: Expression = new Identifier(tok.loc, tok.value);
         while (true) {
@@ -169,9 +171,9 @@ export class Parser {
         if (tok.matchSign(Sign.ParenL)) {
           return this.parseParenExpr(tok);
         } else if (tok.matchSign(Sign.Minus) || tok.matchSign(Sign.Not)) {
-          return this.parseUnaryExpr();
+          return this.parseUnaryExpr(tok);
         } else if (tok.matchSign(Sign.At)) {
-          return this.parseExprOnce();
+          return this.parseExprOnce(tok);
         } else if (tok.matchSign(Sign.BraceL)) {
           return this.parseObjectExpr(tok);
         } else if (tok.matchSign(Sign.BracketL)) {
@@ -220,6 +222,8 @@ export class Parser {
     const args: Expression[] = [];
     this.nextMustSign(Sign.ParenL);
     while (true) {
+      if (this.aheadIsEos() || this.aheadIsSign(Sign.ParenR)) break;
+
       args.push(this.parseExpr());
       if (this.aheadIsSign(Sign.Comma)) {
         this.next();
@@ -246,12 +250,15 @@ export class Parser {
     this.nextMustSign(Sign.BracketL);
     const prop = this.parseExpr();
     const node = new MemberExpression(object.loc.clone(), object, prop, true);
+    this.nextMustSign(Sign.BracketR);
     return this.finNode(node);
   }
 
   parseArrayExpr(tok: Token) {
     const node = new ArrayExpr(tok.loc);
     while (true) {
+      if (this.aheadIsEos()) break;
+
       if (this.aheadIsSign(Sign.BracketR)) {
         this.lexer.next();
         break;
@@ -267,15 +274,14 @@ export class Parser {
   parseObjectExpr(tok: Token) {
     const node = new ObjectExpr(tok.loc);
     while (true) {
+      if (this.aheadIsEos()) break;
+
       if (this.aheadIsSign(Sign.BraceR)) {
         this.lexer.next();
         break;
       }
       node.properties.push(this.parseObjectProperty());
-      if (this.aheadIsSign(Sign.Comma)) {
-        this.lexer.next();
-        break;
-      }
+      if (this.aheadIsSign(Sign.Comma)) this.lexer.next();
     }
     return this.finNode(node);
   }
@@ -290,16 +296,20 @@ export class Parser {
   }
 
   parseParenExpr(tok: Token) {
-    const expr = this.parseExpr();
+    const exprs: Expression[] = [];
+    while (true) {
+      if (this.aheadIsSign(Sign.ParenR) || this.aheadIsEos()) break;
+      exprs.push(this.parseExpr());
+      if (this.aheadIsSign(",")) this.lexer.next();
+    }
     this.nextMustSign(Sign.ParenR);
-    const node = new ParenExpression(tok.loc, expr);
+    const node = new ParenExpression(tok.loc, exprs);
     return this.finNode(node);
   }
 
-  parseUnaryExpr() {
-    const op = this.next();
+  parseUnaryExpr(tok: Token) {
     const arg = this.parseExpr();
-    const node = new UnaryExpression(op.loc.clone(), op, arg);
+    const node = new UnaryExpression(tok.loc, tok, arg);
     return this.finNode(node);
   }
 
@@ -343,6 +353,8 @@ export class Parser {
     this.src.read(3);
     const cs: string[] = [];
     while (true) {
+      if (this.aheadIsEos()) break;
+
       const c = this.src.read();
       if (c === "-" && this.src.peek(2) === "->") {
         this.src.read(2);
@@ -388,6 +400,8 @@ export class Parser {
   parseAttrs() {
     const attrs: TagAttr[] = [];
     while (true) {
+      if (this.aheadIsEos()) break;
+
       this.lexer.skipWhitespace();
       if (this.aheadIsSign(">") || this.aheadIsSign("/")) break;
       attrs.push(this.parseAttr());
@@ -414,6 +428,8 @@ export class Parser {
   parseChildren(until: string) {
     const children: Statement[] = [];
     while (true) {
+      if (this.aheadIsEos()) break;
+
       const node = this.parseStmt() as MayBeCloseStmt;
       if (node.isClose) {
         if (node.name === until) break;
@@ -444,6 +460,7 @@ export class Parser {
     const cs: string[] = [tok.value];
     while (true) {
       if (this.aheadIsEos()) break;
+
       const c = this.src.peek();
       if (c === "<" || this.aheadIsExprBegin()) {
         cs.push(this.lexer.skipWhitespace());
@@ -473,8 +490,8 @@ export class Parser {
     const node = new IfStatement(tok.loc, test);
     let block = node.cons;
     while (true) {
-      // if statement with no closing tag
       if (this.aheadIsEos()) break;
+
       const stmt = this.parseStmt();
       if (stmt instanceof CommandStmt) {
         if (stmt.name === CmdElse) {
@@ -521,6 +538,8 @@ export class Parser {
 
     let block = node.body;
     while (true) {
+      if (this.aheadIsEos()) break;
+
       const stmt = this.parseStmt();
       if (stmt instanceof CommandStmt) {
         if (stmt.name === CmdElse) {

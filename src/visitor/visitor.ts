@@ -24,7 +24,9 @@ import {
   CommentStmt,
   CommandStmt,
   ExprStmt,
-  PipeExpression
+  PipeExpression,
+  ArrayExpr,
+  OnceExpression
 } from "../parser/ast";
 
 export abstract class AstVisitor {
@@ -47,7 +49,7 @@ export abstract class AstVisitor {
       case NodeType.TagStmt:
         return this.visitTagStmt(stmt as any);
       case NodeType.TextStmt:
-        return this.visitTagStmt(stmt as any);
+        return this.visitTextStmt(stmt as any);
       case NodeType.ExprStmt:
         return this.visitExprStmt(stmt as any);
     }
@@ -68,6 +70,8 @@ export abstract class AstVisitor {
   abstract visitParenExpr(node: ParenExpression): any;
   abstract visitTernaryExpr(node: TernaryExpression): any;
   abstract visitPipeExpr(node: PipeExpression): any;
+  abstract visitArrayExpr(node: ArrayExpr): any;
+  abstract visitOnceExpr(node: OnceExpression): any;
 
   visitExpr(expr: Expression) {
     switch (expr.type) {
@@ -86,7 +90,7 @@ export abstract class AstVisitor {
       case NodeType.BinaryExpr:
         return this.visitBinaryExpr(expr as any);
       case NodeType.UnaryExpr:
-        return this.visitBinaryExpr(expr as any);
+        return this.visitUnaryExpr(expr as any);
       case NodeType.MemberExpr:
         return this.visitMemberExpr(expr as any);
       case NodeType.CallExpr:
@@ -99,6 +103,12 @@ export abstract class AstVisitor {
         return this.visitTernaryExpr(expr as any);
       case NodeType.PipeExpr:
         return this.visitPipeExpr(expr as any);
+      case NodeType.ObjectProperty:
+        return this.visitObjectProp(expr as any);
+      case NodeType.ArrayExpr:
+        return this.visitArrayExpr(expr as any);
+      case NodeType.OnceExpr:
+        return this.visitOnceExpr(expr as any);
     }
   }
 }
