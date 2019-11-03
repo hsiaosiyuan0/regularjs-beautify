@@ -24,8 +24,8 @@ export enum NodeType {
   OnceExpr,
 
   Prog,
-  IfStmt,
-  ListStmt,
+  // IfStmt,
+  // ListStmt,
   TagStmt,
   TextStmt,
   CommentStmt,
@@ -350,7 +350,7 @@ export class CommandStmt extends Statement {
   isClose: boolean;
 
   constructor(loc: SourceLoc, name: symbol) {
-    super(NodeType.TagStmt, loc);
+    super(NodeType.CommandStmt, loc);
     this.name = name;
     this.arguments = [];
     this.isClose = false;

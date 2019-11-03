@@ -42,16 +42,16 @@ export abstract class AstVisitor {
 
   visitStmt(stmt: Statement) {
     switch (stmt.type) {
-      case NodeType.IfStmt:
-        return this.visitIfStmt(stmt as any);
-      case NodeType.ListStmt:
-        return this.visitListStmt(stmt as any);
+      case NodeType.CommandStmt:
+        return this.visitCommandStmt(stmt as any);
       case NodeType.TagStmt:
         return this.visitTagStmt(stmt as any);
       case NodeType.TextStmt:
         return this.visitTextStmt(stmt as any);
       case NodeType.ExprStmt:
         return this.visitExprStmt(stmt as any);
+      case NodeType.CommentStmt:
+        return this.visitCommentStmt(stmt as any);
     }
   }
 

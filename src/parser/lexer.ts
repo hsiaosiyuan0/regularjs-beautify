@@ -244,8 +244,22 @@ export class Lexer {
     const c = this.src.peek();
     switch (c) {
       case "<":
+        this.src.read();
+        if (this.src.peek() === "=")
+          return this.finTok(Token.newSign(loc, c + this.src.read()));
+        return this.finTok(Token.newSign(loc, c));
       case ">":
+        this.src.read();
+        if (this.src.peek() === "=")
+          return this.finTok(Token.newSign(loc, c + this.src.read()));
+        return this.finTok(Token.newSign(loc, c));
       case "=":
+        this.src.read();
+        if (this.src.peek(2) === "==")
+          return this.finTok(Token.newSign(loc, c + this.src.read(2)));
+        if (this.src.peek() === "=")
+          return this.finTok(Token.newSign(loc, c + this.src.read()));
+        return this.finTok(Token.newSign(loc, c));
       case "!":
         this.src.read();
         if (this.aheadIsChar("="))

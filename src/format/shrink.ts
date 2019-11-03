@@ -18,7 +18,8 @@ import {
   PipeExpression,
   OnceExpression,
   TagStatement,
-  TagAttr
+  TagAttr,
+  TextStatement
 } from "../parser";
 import { Line, line_, link_, lines_ } from "./line";
 import { Formatter } from "./format";
@@ -100,6 +101,19 @@ export const shrink = (formatter: Formatter, line: Line): Line[] => {
   if (after.length) {
     afterLine = line_(combine(formatter, after), after, line.indent, false);
   }
+
+  // if the open part of tag is shrunk then its text children should
+  // force to take a whole line
+  if (node instanceof TagStatement && !node.selfClose) {
+    if (line.next && line.next.nodes.length === 1) {
+      const first = line.next.nodes[0];
+      if (first instanceof TextStatement || first instanceof Token) {
+        line.next.force = true;
+        line.next.steel = true;
+      }
+    }
+  }
+
   return link_(lines_(beforeLine, newLines, afterLine));
 };
 

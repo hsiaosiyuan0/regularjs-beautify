@@ -27,6 +27,7 @@ export class Sign {
   static LT = "<";
   static GT = ">";
   static Eq = "==";
+  static StrictEq = "===";
   static NotEq = "!=";
   static ParenL = "(";
   static ParenR = ")";
@@ -59,6 +60,7 @@ const precedence = new Map(
     "<": 11,
     ">": 11,
     "==": 10,
+    "===": 10,
     "!=": 10,
     "&&": 6,
     "||": 5

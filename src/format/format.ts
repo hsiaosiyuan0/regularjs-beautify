@@ -31,10 +31,14 @@ import {
   ArrayExpr,
   OnceExpression,
   TagAttr,
-  NodeType
+  NodeType,
+  Token,
+  CmdIf,
+  CmdElseIf,
+  CmdList
 } from "../parser";
 import { Line, line_, link_, lines_ } from "./line";
-import { shrinkLines, sign_ } from "./shrink";
+import { shrinkLines, sign_, combine } from "./shrink";
 import { print } from "./print";
 
 const defaultOptions = {
@@ -46,6 +50,7 @@ export type FormatterOptions = typeof defaultOptions;
 
 class Context {
   indent = 0;
+  stmt?: symbol;
 }
 
 export class Formatter extends AstVisitor {
@@ -78,10 +83,22 @@ export class Formatter extends AstVisitor {
     this.options = Object.assign({}, defaultOptions, options);
   }
 
+  enter() {
+    const ctx = new Context();
+    this.ctxStack.push(ctx);
+    return ctx;
+  }
+
+  leave() {
+    return this.ctxStack.pop();
+  }
+
   run() {
-    this.ctxStack.push({ indent: this.options.baseIndent });
+    const ctx = this.enter();
+    ctx.indent = this.options.baseIndent;
     this.prog = this.parser.parseProg();
     this.visitProg(this.prog);
+    this.leave();
     const first = shrinkLines(this, this.lines);
     return print(first, this.options.printWidth);
   }
@@ -92,13 +109,66 @@ export class Formatter extends AstVisitor {
   }
 
   visitIfStmt(node: IfStatement) {
-    // TODO:
-    throw new Error("Method not implemented.");
+    const ctx = this.ctx;
+    const indent = ctx.indent;
+    const cmd = ctx.stmt === CmdIf ? "elseif" : "if";
+    const beginNodes = [sign_(`{#${cmd} `), node.test, sign_("}")];
+    const beginLine = line_(
+      combine(this, beginNodes),
+      beginNodes,
+      indent,
+      true,
+      true
+    );
+
+    this.enter().indent = indent + 2;
+    const consLines = this.visitStmts(node.cons);
+    this.leave();
+
+    let altLines: Line[] = [];
+    const altCtx = this.enter();
+    if (node.alt.length === 1 && node.alt[0]["name"] === CmdElseIf) {
+      altCtx.indent = indent;
+      altCtx.stmt = CmdIf;
+      altLines = this.visitIfStmt(node.alt[0] as any);
+    } else if (node.alt.length) {
+      altCtx.indent = indent + 2;
+      const elseLine = line_("{#else}", [], indent, true, true, true);
+      altLines = link_(lines_(elseLine, this.visitStmts(node.alt)));
+    }
+    this.leave();
+    let closeLine: Line | undefined;
+    if (node.name === CmdIf) {
+      closeLine = line_("{/if}", [], indent, true, true, true);
+    }
+    return link_(lines_(beginLine, consLines, altLines, closeLine));
   }
 
   visitListStmt(node: ListStatement) {
-    // TODO:
-    throw new Error("Method not implemented.");
+    const indent = this.ctx.indent;
+    const beginNodes: Array<Token | Expression> = [sign_("{#list ")];
+    const argsLen = node.arguments.length;
+    node.arguments.forEach((arg, i) => {
+      if (i !== 0) beginNodes.push(sign_(" "));
+      beginNodes.push(arg);
+      if (i === 0 && argsLen > 1) beginNodes.push(sign_(" as"));
+      if (i === 1 && argsLen > 2) beginNodes.push(sign_(" by"));
+    });
+    const beginLine = line_(combine(this, beginNodes), beginNodes, indent);
+
+    this.enter().indent = indent + 2;
+    const body = this.visitStmts(node.body);
+    this.leave();
+
+    let altLines: Line[] = [];
+    if (node.alt.length) {
+      altLines.push(line_("{#else}", [], indent, true, true, true));
+      this.enter().indent = indent + 2;
+      altLines = altLines.concat(this.visitStmts(node.alt));
+    }
+
+    const closeLine = line_("{/list}", [], indent, true, true, true);
+    return link_(lines_(beginLine, body, altLines, closeLine));
   }
 
   visitTagAttr(attr: TagAttr) {
@@ -120,7 +190,7 @@ export class Formatter extends AstVisitor {
     const gap = attrs && " ";
     const indent = this.ctx.indent;
     const open = line_(
-      `<${node.name}${gap}${attrs}${node.selfClose ? "/" : ""}>`,
+      `<${node.name}${gap}${attrs}${node.selfClose ? " /" : ""}>`,
       [node],
       indent,
       true,
@@ -132,12 +202,12 @@ export class Formatter extends AstVisitor {
 
     const close = `</${node.name}>`;
     if (node.body.length === 0) {
-      return line_(open.text + close, [node], indent, true);
+      return line_(open.text + close, [node], indent, true, true);
     }
 
-    this.ctxStack.push({ indent: indent + 2 });
+    this.enter().indent = indent + 2;
     const bodyLines = this.visitStmts(node.body);
-    this.ctxStack.pop();
+    this.leave();
 
     const closeLine = line_(close, [], indent, true, true, true);
     if (node.body.length === 1 && node.body[0].type === NodeType.TextStmt) {
@@ -149,16 +219,25 @@ export class Formatter extends AstVisitor {
   }
 
   visitTextStmt(node: TextStatement) {
-    const value = node.value.replace(/\s+/g, " ");
+    const value = node.value.trim().replace(/\s+/g, " ");
     return line_(value, [sign_(value)], this.ctx.indent);
   }
 
   visitCommentStmt(node: CommentStmt) {
-    return line_(node.value, [node], this.ctx.indent, true, true, true);
+    return line_(
+      `<!-- ${node.value.trim()} -->`,
+      [node],
+      this.ctx.indent,
+      true,
+      true,
+      true
+    );
   }
 
   visitCommandStmt(node: CommandStmt) {
-    throw new Error("Method not implemented.");
+    if (node.name === CmdIf || node.name === CmdElseIf)
+      return this.visitIfStmt(node as any);
+    if (node.name === CmdList) return this.visitListStmt(node as any);
   }
 
   visitExprStmt(node: ExprStmt) {
