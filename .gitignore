@@ -29,3 +29,4 @@ test/fixtures/**/.fbkpm
 /test.html
 /test.jsx
 /src/local_test.ts
+/test.rgl

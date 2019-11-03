@@ -1,8 +1,15 @@
 {
   "name": "regularjs-beautify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Beautify the template content of Regularjs",
+  "keywords": [
+    "Regularjs",
+    "regularjs",
+    "formatter",
+    "format"
+  ],
   "main": "lib/index.js",
+  "bin": "lib/bin.js",
   "repository": "https://github.com/hsiaosiyuan0/regularjs-beautify.git",
   "author": "hsiaosiyuan0",
   "license": "MIT",
@@ -13,6 +20,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "chalk": "^2.4.2",
+    "commander": "^4.0.0",
     "debug": "^4.1.1"
   },
   "devDependencies": {
