@@ -8,7 +8,9 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "noImplicitAny": false,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "declaration": true,
+    "declarationDir": "lib"
   },
   "include": ["src/**/*.ts", "src/parser/plugin.js"],
   "exclude": ["node_modules"]
