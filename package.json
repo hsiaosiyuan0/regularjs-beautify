@@ -7,8 +7,10 @@
   "author": "hsiaosiyuan0",
   "license": "MIT",
   "scripts": {
-    "build": "babel src -d lib --extensions \".ts\" --source-maps inline",
-    "dev": "node lib/index.js"
+    "build": "babel src -d lib --extensions \".ts\" --source-maps",
+    "dev": "node lib/index.js",
+    "check": "tsc --noEmit -p ./tsconfig.json",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "debug": "^4.1.1"

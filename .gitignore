@@ -28,3 +28,4 @@ test/fixtures/**/.fbkpm
 /test.json
 /test.html
 /test.jsx
+/src/local_test.ts

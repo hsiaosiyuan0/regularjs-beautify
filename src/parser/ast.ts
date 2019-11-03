@@ -24,8 +24,6 @@ export enum NodeType {
   OnceExpr,
 
   Prog,
-  // IfStmt,
-  // ListStmt,
   TagStmt,
   TextStmt,
   CommentStmt,
