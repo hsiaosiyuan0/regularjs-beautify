@@ -287,7 +287,9 @@ export class Parser {
   }
 
   parseObjectProperty() {
-    const key = this.assertNext(tok => tok.kind === TokKind.Identifier);
+    const key = this.assertNext(
+      tok => tok.kind === TokKind.Identifier || tok.kind === TokKind.String
+    );
     this.nextMustSign(Sign.Colon);
     const value = this.parseExpr();
     return this.finNode(
