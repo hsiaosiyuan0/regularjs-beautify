@@ -1,6 +1,6 @@
 {
   "name": "regularjs-beautify",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Beautify the template content of Regularjs",
   "keywords": [
     "Regularjs",
@@ -16,7 +16,7 @@
   "scripts": {
     "build": "babel src -d lib --extensions \".ts\" --source-maps",
     "type" : "tsc --emitDeclarationOnly -p ./tsconfig.json ",
-    "dev": "node lib/index.js",
+    "dev": "node lib/local_test.js",
     "check": "tsc --noEmit -p ./tsconfig.json",
     "prepublishOnly": "npm run type && npm run build"
   },

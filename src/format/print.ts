@@ -28,7 +28,8 @@ export const print = (line?: Line, printWidth = 80) => {
         next.inline ||
         (text.length + nt.length <= printWidth && !next.force)
       ) {
-        text += (isBin(nt) ? " " : "") + nt;
+        const b = isBin(nt);
+        text += (b ? " " : "") + nt + (b ? " " : "");
         line = line.next;
       } else break;
     }
