@@ -22,6 +22,7 @@ export enum NodeType {
   TernaryExpr,
   PipeExpr,
   OnceExpr,
+  AssignExpr,
 
   Prog,
   TagStmt,
