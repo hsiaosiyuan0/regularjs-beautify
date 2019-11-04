@@ -273,6 +273,7 @@ export class Lexer {
           return this.finTok(Token.newSign(loc, c + this.src.read()));
         return this.finTok(Token.newSign(loc, c));
       case "&":
+        this.src.read();
         if (this.aheadIsChar("&"))
           return this.finTok(Token.newSign(loc, c + this.src.read()));
         this.raiseErr();
