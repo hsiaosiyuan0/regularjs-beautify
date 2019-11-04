@@ -6,7 +6,7 @@ export class Line {
   next?: Line;
   indent = 0;
   text = "";
-  // force to be treated as new lint
+  // force to be treated as new line
   force = false;
   // force this line follow the preceding one
   inline = false;
