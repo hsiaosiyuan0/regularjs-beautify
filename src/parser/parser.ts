@@ -38,6 +38,7 @@ import {
   OnceExpression
 } from "./ast";
 import { SourceLoc } from "./source";
+import { LocatableError } from "./error";
 
 export class Parser {
   lexer: Lexer;
@@ -136,8 +137,9 @@ export class Parser {
   raiseErr(tok: Token): never {
     const line = tok.loc.start.line;
     const col = tok.loc.start.column;
-    throw new Error(
-      `Unexpected tok ${tok.value} at line: ${line} column: ${col}`
+    throw new LocatableError(
+      `Unexpected tok ${tok.value} at line: ${line} column: ${col}`,
+      tok.loc
     );
   }
 
@@ -148,10 +150,11 @@ export class Parser {
   ): never {
     const line = loc.start.line;
     const col = loc.start.column;
-    throw new Error(
+    throw new LocatableError(
       `Unexpected closing tag ${String(
         got
-      )} at line: ${line} column: ${col}, expect ${expect}`
+      )} at line: ${line} column: ${col}, expect ${expect}`,
+      loc
     );
   }
 
