@@ -1,5 +1,6 @@
 import { Source, EOL, SourceLoc, Position, EOS } from "./source";
 import { Token, isKeyword, TokKind } from "./token";
+import { LocatableError } from "./error";
 
 export class Lexer {
   src: Source;
@@ -337,7 +338,10 @@ export class Lexer {
   }
 
   raiseErr() {
-    throw new LexerError(this.errMsg());
+    throw new LocatableError(
+      this.errMsg(),
+      new SourceLoc(this.src.file, this.pos)
+    );
   }
 }
 
@@ -387,5 +391,3 @@ const singleEscapeChs = new Set(["'", '"', "\\", "b", "f", "n", "r", "t", "v", "
 export function isSingleEscapeCh(c: string) {
   return singleEscapeChs.has(c);
 }
-
-export class LexerError extends Error {}

@@ -1,4 +1,4 @@
-import { SourceLoc } from "./source";
+import { SourceLoc, emptyLoc } from "./source";
 import { Token } from "./token";
 
 export enum NodeType {
@@ -403,6 +403,5 @@ export class TextStatement extends Statement {
   }
 }
 
-export const emptyLoc = new SourceLoc();
 export const unknownExpr = new Expression(NodeType.Unknown, emptyLoc);
 export const unknownStmt = new Statement(NodeType.Unknown, emptyLoc);

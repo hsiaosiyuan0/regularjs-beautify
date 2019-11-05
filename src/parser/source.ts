@@ -1,4 +1,4 @@
-import { LexerError } from "./lexer";
+import { LocatableError } from "./error";
 
 export const NL = "\n";
 export const CR = "\r";
@@ -91,7 +91,10 @@ export class Source {
   restorePos() {
     const pos = this.posStack.pop();
     if (pos === undefined)
-      throw new LexerError("Unbalanced popping of position stack");
+      throw new LocatableError(
+        "Unbalanced popping of position stack",
+        new SourceLoc(this.file, this.pos)
+      );
 
     this.ofst = pos.ofst;
     this.line = pos.line;
@@ -104,7 +107,7 @@ export class SourceLoc {
   start: Position;
   end: Position;
 
-  constructor(source = "", start = new Position(), end = new Position()) {
+  constructor(source = "", start = emptyPos, end = emptyPos) {
     this.source = source;
     this.start = start;
     this.end = end;
@@ -114,3 +117,6 @@ export class SourceLoc {
     return new SourceLoc(this.source, this.start.clone(), this.end.clone());
   }
 }
+
+export const emptyPos = new Position(-1, -1, -1);
+export const emptyLoc = new SourceLoc(undefined, emptyPos, emptyPos);
