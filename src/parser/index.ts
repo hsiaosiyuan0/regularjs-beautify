@@ -3,3 +3,4 @@ export * from "./token";
 export * from "./lexer";
 export * from "./parser";
 export * from "./ast";
+export * from "./error";
