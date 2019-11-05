@@ -37,6 +37,7 @@ import {
   ObjectProperty,
   OnceExpression
 } from "./ast";
+import { SourceLoc } from "./source";
 
 export class Parser {
   lexer: Lexer;
@@ -137,6 +138,20 @@ export class Parser {
     const col = tok.loc.start.column;
     throw new Error(
       `Unexpected tok ${tok.value} at line: ${line} column: ${col}`
+    );
+  }
+
+  raiseImbalancedTagErr(
+    loc: SourceLoc,
+    got: string | symbol,
+    expect: string
+  ): never {
+    const line = loc.start.line;
+    const col = loc.start.column;
+    throw new Error(
+      `Unexpected closing tag ${String(
+        got
+      )} at line: ${line} column: ${col}, expect ${expect}`
     );
   }
 
@@ -435,7 +450,7 @@ export class Parser {
       const node = this.parseStmt() as MayBeCloseStmt;
       if (node.isClose) {
         if (node.name === until) break;
-        this.raiseErr(this.tok);
+        this.raiseImbalancedTagErr(node.loc, node.name, until);
       }
       children.push(node);
     }

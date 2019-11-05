@@ -347,7 +347,8 @@ export class Formatter extends AstVisitor {
   visitPipeExpr(node: PipeExpression) {
     const expr = this.visitExpr(node.expr);
     const args = this.visitSeqExpr(node.args);
-    return `${expr} | ${node.name}: ${args}`;
+    const colon = node.args.length ? ":" : "";
+    return `${expr} | ${node.name}${colon} ${args}`;
   }
 
   visitOnceExpr(node: OnceExpression) {

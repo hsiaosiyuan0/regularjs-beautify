@@ -103,7 +103,9 @@ export class ObjectExpr extends Expression {
   }
 }
 
-export class StringLiteral extends Expression {
+export class Literal extends Expression {}
+
+export class StringLiteral extends Literal {
   value: string;
 
   constructor(loc: SourceLoc, value: string) {
@@ -111,8 +113,6 @@ export class StringLiteral extends Expression {
     this.value = value;
   }
 }
-
-export class Literal extends Expression {}
 
 export class NumberLiteral extends Literal {
   value: string;

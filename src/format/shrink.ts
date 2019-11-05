@@ -79,7 +79,7 @@ export const shrink = (formatter: Formatter, line: Line): Line[] => {
   const i = line.nodes.findIndex(isShrinkable);
   if (i === -1) {
     line.fine = true;
-    return [];
+    return [line];
   }
 
   const before = line.nodes.slice(0, i);
@@ -289,11 +289,8 @@ export const shrinkers = {
   [NodeType.PipeExpr](formatter: Formatter, node: PipeExpression, indent = 0) {
     const exprNodes = [node.expr];
     const exprLine = line_(combine(formatter, exprNodes), exprNodes, indent);
-    let cmdNodes: Array<Token | Expression> = [
-      sign_("| "),
-      sign_(node.name),
-      sign_(": ")
-    ];
+    let cmdNodes: Array<Token | Expression> = [sign_("| "), sign_(node.name)];
+    if (node.args.length) cmdNodes.push(sign_(": "));
     cmdNodes = cmdNodes.concat(node.args);
     const cmdLine = line_(combine(formatter, cmdNodes), cmdNodes, indent + 2);
     return link_(lines_(exprLine, cmdLine));
