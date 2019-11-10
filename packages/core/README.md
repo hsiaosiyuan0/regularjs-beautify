@@ -12,16 +12,16 @@ This is the core of regularjs-beautify, it contains the core logic about beautif
 
 ### Use as lib
 
-`npm install regularjs-beautify`
+`npm install regularjs-beautify-core`
 
 then 
 
 ```ts
-import { Formatter } from "regularjs-beautify"
+import { Formatter } from "regularjs-beautify-core"
 ```
 
 ### Use as command-line
 
-`npx regularjs-beautify the-file-to-be-beautified`
+`npx regularjs-beautify-core the-file-to-be-beautified`
 
 Above command just puts the results into stdin, plus an option `-w` if you want to effect the source file.

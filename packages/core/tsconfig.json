@@ -12,6 +12,6 @@
     "declaration": true,
     "declarationDir": "lib"
   },
-  "include": ["src/**/*.ts", "src/parser/plugin.js"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }
