@@ -162,7 +162,9 @@ export class Parser {
     const tok = this.next();
     switch (tok.kind) {
       case TokKind.String:
-        return new StringLiteral(tok.loc, tok.value);
+        const node = new StringLiteral(tok.loc, tok.value);
+        this.forbidInterpolation(node.value, node.loc);
+        return node;
       case TokKind.Number:
         return new NumberLiteral(tok.loc, tok.value);
       case TokKind.Bool:
@@ -422,8 +424,10 @@ export class Parser {
     while (true) {
       if (this.aheadIsEos()) break;
 
-      this.lexer.skipWhitespace();
+      const spaces = this.lexer.skipWhitespace();
       if (this.aheadIsSign(">") || this.aheadIsSign("/")) break;
+
+      if (spaces.length === 0) this.raiseErr(this.tok);
       attrs.push(this.parseAttr());
     }
     return attrs;
@@ -477,18 +481,26 @@ export class Parser {
   }
 
   parseTextElement(tok: Token) {
-    const cs: string[] = [tok.value];
+    const cs: string[] = [tok.value.trim()];
     while (true) {
       if (this.aheadIsEos()) break;
 
       const c = this.src.peek();
-      if (c === "<" || this.aheadIsExprBegin()) {
+      if (c === "\\") {
+        cs.push(this.src.read(2));
+      } else if (c === "<" || this.aheadIsExprBegin()) {
+        if (this.aheadIsExprBegin() && cs[cs.length - 1] === "$") {
+          this.raiseJsInterpolationErr(this.lexer.loc);
+        }
         cs.push(this.lexer.skipWhitespace());
         break;
       }
       cs.push(this.src.read());
     }
-    return this.finNode(new TextStatement(tok.loc, cs.join("")));
+
+    const str = cs.join("");
+    this.forbidInterpolation(str, tok.loc);
+    return this.finNode(new TextStatement(tok.loc, str));
   }
 
   parseCommand(tok: Token) {
@@ -587,5 +599,26 @@ export class Parser {
       return this.finNode(node);
     }
     this.raiseErr(tok);
+  }
+
+  raiseJsInterpolationErr(loc: SourceLoc) {
+    throw new LocatableError(
+      "Using javascript interpolation in template is forbidden",
+      loc
+    );
+  }
+
+  // Firstly, interpolation is beginning with `${`, below we call it DB(Dollar-Brace) for short.
+  // If DB appears in code except string literal, it will be recognized as deformed token.
+  // However, DB will be recognized as the legal content of string if it appears in the sequence
+  // of string characters, we should close this passage to disable using interpolation in template.
+  // Using interpolation in template will cause the scope semantics of template to be obscure,
+  // user shall consider the scope of template own and the scope of interpolation whose scope is belong
+  // to the outer isolate Javascript
+  forbidInterpolation(str: string, loc: SourceLoc) {
+    const db = str.match(/(?=[^\\])\$\{/);
+    if (db === null) return;
+    loc.start.column += db.index!;
+    this.raiseJsInterpolationErr(loc);
   }
 }
