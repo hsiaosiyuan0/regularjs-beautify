@@ -189,6 +189,11 @@ export class Formatter extends AstVisitor {
     const attrs = this.visitTagAttrs(node.attrs);
     const gap = attrs && " ";
     const indent = this.ctx.indent;
+
+    if (!node.selfClose) {
+      node.selfClose = node.body.length === 0;
+    }
+
     const open = line_(
       `<${node.name}${gap}${attrs}${node.selfClose ? " /" : ""}>`,
       [node],

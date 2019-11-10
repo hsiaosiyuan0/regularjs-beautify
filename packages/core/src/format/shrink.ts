@@ -184,20 +184,6 @@ export const shrinkers = {
     node: ObjectExpression,
     indent = 0
   ) {
-    const begin = line_("{", [sign_("{")], indent);
-    const propsLines = shrinkers.seq(
-      formatter,
-      node.properties as any,
-      indent + 2
-    );
-    const close = line_("}", [sign_("}")], indent);
-    return link_(lines_(begin, propsLines, close));
-  },
-  [NodeType.ObjectExpr](
-    formatter: Formatter,
-    node: ObjectExpression,
-    indent = 0
-  ) {
     const begin = line_("{", [sign_("{")], indent, true);
     const propsLines = shrinkers.seq(
       formatter,
