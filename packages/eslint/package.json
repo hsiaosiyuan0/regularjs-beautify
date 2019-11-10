@@ -51,5 +51,6 @@
     "plugins": [
       "@babel/plugin-proposal-class-properties"
     ]
-  }
+  },
+  "gitHead": "ede37e8f3602bd0051908a215d9fab3c05faa84a"
 }

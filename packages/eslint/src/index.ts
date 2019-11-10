@@ -23,7 +23,7 @@ const create = (ctx: Rule.RuleContext) => {
       const tag = code.match(/\s*<!--\s*@regularjs\s*-->/);
       if (tag === null) return;
 
-      let beginLine = node.loc.start.line;
+      let beginLine = node.loc!.start.line;
       const precedingLines = str.slice(0, tag.index).split(/\r?\n/).length;
       beginLine += precedingLines;
 
