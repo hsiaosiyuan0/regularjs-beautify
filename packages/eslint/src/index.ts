@@ -44,7 +44,12 @@ const create = (ctx: Rule.RuleContext) => {
             return fixer.replaceTextRange(node.range!, `\`${output}\``);
           }
         });
-      } catch (e) {}
+      } catch (e) {
+        ctx.report({
+          node,
+          message: e.message
+        });
+      }
     }
   };
 };
