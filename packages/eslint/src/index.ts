@@ -54,8 +54,6 @@ export const regularjs: Rule.RuleModule = {
   create
 };
 
-export default {
-  rules: {
-    regularjs
-  }
+export const rules = {
+  regularjs
 };
