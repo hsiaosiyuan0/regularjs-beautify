@@ -41,7 +41,7 @@ const create = (ctx: Rule.RuleContext) => {
           node: node,
           message: "poor style used in template",
           fix(fixer: Rule.RuleFixer) {
-            return fixer.replaceTextRange(node.range, `\`${output}\``);
+            return fixer.replaceTextRange(node.range!, `\`${output}\``);
           }
         });
       } catch (e) {}

@@ -8,7 +8,7 @@
     "type": "tsc --emitDeclarationOnly -p ./tsconfig.json ",
     "check": "tsc --noEmit -p ./tsconfig.json",
     "prepublishOnly": "npm run type && npm run build",
-    "test": "mocha -r ts-node/register tests/**/*-test.ts"
+    "test": "mocha -r ./babel-register.js tests/**/*-test.ts"
   },
   "repository": "https://github.com/hsiaosiyuan0/regularjs-beautify.git",
   "keywords": [
@@ -34,13 +34,13 @@
     "@babel/plugin-proposal-class-properties": "^7.7.0",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-typescript": "^7.7.2",
+    "@babel/register": "^7.7.0",
     "@types/chai": "^4.2.4",
     "@types/eslint": "^6.1.3",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "eslint": "^6.6.0",
     "mocha": "^6.2.2",
-    "ts-node": "^8.4.1",
     "typescript": "^3.7.2"
   },
   "babel": {
