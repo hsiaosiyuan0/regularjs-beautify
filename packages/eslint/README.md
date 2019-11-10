@@ -31,7 +31,7 @@ const tpl = `
 `;
 ```
 
-Please notice the snippet `<!-- @regularjs -->`, it's required to tell eslint to entry the logic of this plugin. 
+Please notice the snippet `<!-- @regularjs -->`, it's required to tell eslint to entre the logic of this plugin. 
 
 > For people who are confused by that comment, let's give it a little bit explain explanation. Suppose we are at the viewpoint of the plugin, how can we known the string is either normal string or regularjs template? If we cannot tell them exactly further we cannot give user the exacter lint reports. So the comment is used to help the user to specify their intents more clearly thus help the plugin to tell the difference between the normal string and the regularjs one.
 
