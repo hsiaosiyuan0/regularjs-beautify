@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-regularjs-beautify",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "ESLint plugin of regularjs-beautify",
   "main": "lib/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/hsiaosiyuan0/regularjs-beautify",
   "dependencies": {
-    "regularjs-beautify-core": "^0.0.3"
+    "regularjs-beautify-core": "^0.0.4"
   },
   "peerDependencies": {
     "eslint": ">=6.6.0"
