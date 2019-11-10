@@ -1,6 +1,6 @@
 # regularjs-beautify-core
 
-This is the core of regularjs-beautify, it contains the core logic about beautifying and is designed as easy to be integrated with. You'll normally use this repo directly, consider to use the other downstream repositories.
+This is the core of regularjs-beautify, it contains the core logic about beautifying and is designed as easy to be integrated with. You'll not normally use this repo directly, consider to use the other downstream repositories.
 
 ## Features
 
