@@ -1,0 +1,48 @@
+{
+  "name": "regularjs-beautify",
+  "version": "0.0.11",
+  "description": "Beautify the template content of Regularjs",
+  "keywords": [
+    "Regularjs",
+    "regularjs",
+    "formatter",
+    "format"
+  ],
+  "main": "lib/index.js",
+  "bin": "lib/bin.js",
+  "repository": "https://github.com/hsiaosiyuan0/regularjs-beautify.git",
+  "author": "hsiaosiyuan0",
+  "license": "MIT",
+  "scripts": {
+    "build": "babel src -d lib --extensions \".ts\" --source-maps",
+    "type": "tsc --emitDeclarationOnly -p ./tsconfig.json ",
+    "dev": "node lib/local_test.js",
+    "check": "tsc --noEmit -p ./tsconfig.json",
+    "prepublishOnly": "npm run type && npm run build"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "commander": "^4.0.0",
+    "debug": "^4.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-typescript": "^7.6.0",
+    "@types/debug": "^4.1.5",
+    "@types/node": "^12.11.7",
+    "lerna": "^3.18.3",
+    "typescript": "^3.6.4"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
+  }
+}
