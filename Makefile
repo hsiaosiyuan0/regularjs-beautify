@@ -1,3 +1,5 @@
+default: build
+
 core-build:
 	@echo "🕹  $@"
 	cd ./packages/core && \
@@ -18,7 +20,7 @@ core-test: core-build
 	npm run check
 	@echo "☘️  $@"
 
-eslint-build:
+eslint-build: core-build
 	@echo "🕹  $@"
 	cd ./packages/eslint && \
 	npm run build
@@ -30,6 +32,14 @@ eslint-test: eslint-build
 	npm run check && \
 	npm test
 	@echo "☘️  $@"
+
+js-build: core-build
+	@echo "🕹  $@"
+	cd ./packages/js && \
+	npm run build
+	@echo "☘️  $@"
+
+build: core-build eslint-build js-build
 
 test: core-test eslint-test
 	

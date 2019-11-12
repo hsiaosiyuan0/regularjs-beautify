@@ -1,0 +1,42 @@
+{
+  "name": "regularjs-beautify-js",
+  "version": "0.0.1",
+  "description": "Easy to format all the templates inside a JavaScript file",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src -d lib --extensions \".ts\" --source-maps",
+    "type": "tsc --emitDeclarationOnly -p ./tsconfig.json ",
+    "check": "tsc --noEmit -p ./tsconfig.json",
+    "prepublishOnly": "npm run type && npm run build"
+  },
+  "repository": "https://github.com/hsiaosiyuan0/regularjs-beautify.git",
+  "keywords": [
+    "eslint",
+    "regularjs",
+    "beautify"
+  ],
+  "author": "hsiaosiyuan0@outlook.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hsiaosiyuan0/regularjs-beautify/issues"
+  },
+  "homepage": "https://github.com/hsiaosiyuan0/regularjs-beautify",
+  "devDependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-proposal-class-properties": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-typescript": "^7.7.2",
+    "@babel/register": "^7.7.0",
+    "typescript": "^3.7.2"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
+  }
+}
