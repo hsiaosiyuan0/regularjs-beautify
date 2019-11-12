@@ -33,13 +33,13 @@ eslint-test: eslint-build
 	npm test
 	@echo "☘️  $@"
 
-js-build: core-build
+dozen-build: core-build
 	@echo "🕹  $@"
-	cd ./packages/js && \
+	cd ./packages/dozen && \
 	npm run build
 	@echo "☘️  $@"
 
-build: core-build eslint-build js-build
+build: core-build eslint-build dozen-build
 
 test: core-test eslint-test
 	
