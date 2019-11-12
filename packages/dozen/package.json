@@ -1,6 +1,6 @@
 {
   "name": "regularjs-beautify-dozen",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Easy to format all the templates inside a JavaScript file",
   "main": "lib/index.js",
   "bin": "lib/bin.js",
@@ -55,7 +55,7 @@
     "@babel/types": "^7.7.2",
     "chalk": "^3.0.0",
     "commander": "^4.0.1",
-    "regularjs-beautify-core": "^0.0.4"
+    "regularjs-beautify-core": "^0.0.5"
   },
   "engines": {
     "node": ">=10.17.0"
