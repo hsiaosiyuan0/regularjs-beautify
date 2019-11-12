@@ -48,6 +48,7 @@ export const format = (
       const { ok, indent, line } = isTemplate(str, node.loc!.start.line);
       if (!ok) return;
 
+      formatOpts.baseIndent = indent;
       const formatter = new Formatter(
         str,
         file,
