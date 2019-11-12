@@ -1,4 +1,4 @@
-import { AstVisitor } from "../visitor/visitor";
+import { AstVisitor } from "../visitor";
 import {
   Prog,
   IfStatement,

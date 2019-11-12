@@ -17,5 +17,8 @@ describe("init test", () => {
       }
     );
     expect(results.messages.length).to.equal(0);
+    expect(results.output).to.equal(
+      "const tpl = `\n        <!-- @regularjs -->\n        <div />`;"
+    );
   });
 });

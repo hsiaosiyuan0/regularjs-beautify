@@ -1,4 +1,4 @@
-import { Formatter } from "regularjs-beautify-core";
+import { Formatter, isTemplate } from "regularjs-beautify-core";
 import { Rule } from "eslint";
 import { Node } from "estree";
 
@@ -18,25 +18,20 @@ const create = (ctx: Rule.RuleContext) => {
 
   return {
     TemplateLiteral(node: Node) {
-      const str = ctx.getSourceCode().getText(node);
-      const code = str.slice(1, -1);
-      const tag = code.match(/\s*<!--\s*@regularjs\s*-->/);
-      if (tag === null) return;
+      const str = ctx
+        .getSourceCode()
+        .getText(node)
+        .slice(1, -1);
+      const { ok, indent, line } = isTemplate(str, node.loc!.start.line);
+      if (!ok) return;
 
-      let beginLine = node.loc!.start.line;
-      const precedingLines = str.slice(0, tag.index).split(/\r?\n/).length;
-      beginLine += precedingLines;
-
-      const space = tag[0].match(/^\s*/);
-      const baseIndent = space && space[0] ? space[0].length & ~1 : 2;
-      const formatter = new Formatter(code, ctx.getFilename(), beginLine, {
-        baseIndent,
+      const formatter = new Formatter(str, ctx.getFilename(), line, {
+        baseIndent: indent,
         printWidth
       });
       try {
-        const formatted = formatter.run();
-        const output = `\n${formatted}`;
-        if (output === code) return;
+        const output = "\n" + formatter.run();
+        if (output === str) return;
         ctx.report({
           node: node,
           message: "poor style used in template",
