@@ -1,4 +1,4 @@
-# regularjs-beautify-js
+# regularjs-beautify-dozen
 
 Easy to format all the templates inside a JavaScript file. It **only** takes care of the style of those template strings beginning with the specific html comment - `<!-- @regular -->`. 
 
@@ -20,4 +20,4 @@ import { format } from "regularjs-beautify-dozen"
 
 `npx regularjs-beautify-dozen the-file-to-be-beautified`
 
-Above command just puts the results into stdin, plus an option `-w` if you want to effect the source file.
+**Note:** above command will effect the source file directly.
