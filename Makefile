@@ -39,6 +39,12 @@ dozen-build: core-build
 	npm run build
 	@echo "☘️  $@"
 
+dozen-test: dozen-build
+	@echo "🕹  $@"
+	cd ./packages/dozen && \
+	npm test
+	@echo "☘️  $@"
+
 build: core-build eslint-build dozen-build
 
 test: core-test eslint-test

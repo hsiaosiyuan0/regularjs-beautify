@@ -8,7 +8,8 @@
     "build": "babel src -d lib --extensions \".ts\" --source-maps",
     "type": "tsc --emitDeclarationOnly -p ./tsconfig.json ",
     "check": "tsc --noEmit -p ./tsconfig.json",
-    "prepublishOnly": "npm run type && npm run build"
+    "prepublishOnly": "npm run type && npm run build",
+    "test": "mocha -r ./babel-register.js tests/**/*-test.ts"
   },
   "repository": "https://github.com/hsiaosiyuan0/regularjs-beautify.git",
   "keywords": [
@@ -30,7 +31,11 @@
     "@babel/preset-typescript": "^7.7.2",
     "@babel/register": "^7.7.0",
     "@types/babel__traverse": "^7.0.7",
+    "@types/chai": "^4.2.5",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.7",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
     "typescript": "^3.7.2"
   },
   "babel": {

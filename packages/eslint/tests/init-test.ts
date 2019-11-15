@@ -4,7 +4,7 @@ import { Linter } from "eslint";
 import { rules } from "../src/index";
 
 describe("init test", () => {
-  it("should return true", () => {
+  it("should work", () => {
     const linter = new Linter();
     linter.defineRules(rules);
     const results = linter.verifyAndFix(
