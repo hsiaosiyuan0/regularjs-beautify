@@ -115,7 +115,6 @@ class Visitor extends AstVisitor {
   }
 
   visitTagStmt(node: TagStatement) {
-    this.ranges.push(range(node));
     if (node.attrs.length) {
       let start = node.attrs[0].loc.start.line;
       let end = node.attrs[0].loc.end.line;
@@ -123,6 +122,12 @@ class Visitor extends AstVisitor {
         end = node.attrs[node.attrs.length - 1].loc.end.line;
       }
       this.ranges.push([start, end]);
+      if (node.selfClose) {
+        this.ranges.push([node.loc.start.line, end]);
+      }
+    }
+    if (!node.selfClose) {
+      this.ranges.push(range(node));
     }
     this.visitStmts(node.body);
   }

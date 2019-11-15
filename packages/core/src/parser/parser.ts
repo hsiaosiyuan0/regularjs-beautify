@@ -442,7 +442,7 @@ export class Parser {
       // consume `/`
       this.lexer.next();
       this.nextMustSign(">");
-      return tag;
+      return this.finNode(tag);
     }
     this.nextMustSign(">");
     tag.body = this.parseChildren(name.value);
