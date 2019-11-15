@@ -13,9 +13,9 @@ describe("init test", () => {
 \`;`;
     const ranges = scan(code);
     expect(ranges).to.eql([
-      [3, 3],
-      [4, 7],
-      [5, 6]
+      [2, 2],
+      [3, 6],
+      [4, 5]
     ]);
   });
 });

@@ -69,7 +69,8 @@ export const scan = (code: string) => {
       tmpArr.push({
         node: path.node!,
         indent,
-        line,
+        // convert to zero-based line number
+        line: line - 1,
         code: str
       });
     }
