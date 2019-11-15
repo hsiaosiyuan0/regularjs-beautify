@@ -70,7 +70,7 @@ export const scan = (code: string) => {
         node: path.node!,
         indent,
         line,
-        code
+        code: str
       });
     }
   });
