@@ -36,7 +36,7 @@ describe("init test", () => {
     const ranges = scan(code);
     expect(ranges).to.eql([
       [2, 2],
-      [4, 12]
+      [4, 13]
     ]);
   });
 });
