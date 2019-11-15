@@ -39,4 +39,18 @@ describe("init test", () => {
       [4, 13]
     ]);
   });
+
+  it("same line start and attrs", () => {
+    const code = `const tpl = \`
+    <!-- @regularjs -->
+    <Table style={{ overflowX: "auto" }} bordered={true}>
+    <div></div>
+    </Table>\``;
+    const ranges = scan(code);
+    expect(ranges).to.eql([
+      [2, 2],
+      [3, 5],
+      [4, 4]
+    ]);
+  });
 });

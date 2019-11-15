@@ -119,9 +119,9 @@ class Visitor extends AstVisitor {
       let start = node.attrs[0].loc.start.line;
       let end = node.attrs[0].loc.end.line;
       if (node.attrs.length > 1) {
-        end = node.attrs[node.attrs.length - 1].loc.end.line + 1;
+        end = node.attrs[node.attrs.length - 1].loc.end.line;
       }
-      this.ranges.push([start, end]);
+      if (end !== node.loc.start.line) this.ranges.push([start, end + 1]);
     }
     if (!node.selfClose) {
       this.ranges.push(range(node));
