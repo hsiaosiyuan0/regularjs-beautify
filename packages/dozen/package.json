@@ -1,6 +1,6 @@
 {
   "name": "regularjs-beautify-dozen",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Easy to format all the templates inside a JavaScript file",
   "main": "lib/index.js",
   "bin": "lib/bin.js",
