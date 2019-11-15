@@ -1,1 +1,4 @@
-babel-register.js linguist-vendored
+packages/core/src/bin.ts linguist-generated=true
+packages/dozen/src/bin.ts linguist-generated=true
+packages/eslint/babel-register.js linguist-generated=true
+packages/dozen/babel-register.js linguist-generated=true
