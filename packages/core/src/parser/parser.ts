@@ -93,9 +93,9 @@ export class Parser {
 
     // consume `?`
     this.lexer.next();
-    const cons = this.parseBinExpr();
+    const cons = this.parseTernaryExpr();
     this.nextMustSign(Sign.Colon);
-    const alt = this.parseBinExpr();
+    const alt = this.parseTernaryExpr();
     return this.finNode(
       new TernaryExpression(test.loc.clone(), test, cons, alt)
     );

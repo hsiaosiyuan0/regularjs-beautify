@@ -175,8 +175,8 @@ export const shrinkers = {
     const cons = formatter.visitExpr(node.cons);
     const alt = formatter.visitExpr(node.alt);
     const line1 = line_(`${test}`, [node.test], indent, false, true);
-    const line2 = line_(`? ${cons}`, [sign_("?"), node.cons], indent + 2, true);
-    const line3 = line_(`: ${alt}`, [sign_(":"), node.alt], indent + 2, true);
+    const line2 = line_(`? ${cons}`, [sign_("? "), node.cons], indent + 2, true);
+    const line3 = line_(`: ${alt}`, [sign_(": "), node.alt], indent + 2, true);
     return link_(lines_(line1, line2, line3));
   },
   [NodeType.ObjectExpr](
