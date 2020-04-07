@@ -13,7 +13,6 @@ core-dev: core-build
 	npm run dev
 	@echo "☘️  $@"
 
-
 core-test: core-build
 	@echo "🕹  $@"
 	cd ./packages/core && \
@@ -48,4 +47,3 @@ dozen-test: dozen-build
 build: core-build eslint-build dozen-build
 
 test: core-test eslint-test
-	

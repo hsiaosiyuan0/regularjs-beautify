@@ -15,12 +15,12 @@ export const fatal = (msg: string) => {
 
 const defaultOpts: ParserOptions = {
   sourceType: "unambiguous",
-  plugins: ["jsx", "typescript", "v8intrinsic"]
+  plugins: ["jsx", "typescript", "v8intrinsic"],
 };
 
 const defaultFormatterOpts = {
   baseIndent: 0,
-  printWidth: 80
+  printWidth: 80,
 };
 
 interface ReplaceRange {
@@ -45,23 +45,23 @@ export const format = (
       if (start >= end) return;
 
       const str = code.slice(start, end);
-      const { ok, indent, line } = isTemplate(str, node.loc!.start.line);
+      const { ok, indent } = isTemplate(str, node.loc!.start.line);
       if (!ok) return;
 
       formatOpts.baseIndent = indent;
       const formatter = new Formatter(
         str,
         file,
-        line,
+        node.loc!.start.line,
         Object.assign({}, defaultFormatterOpts, formatOpts)
       );
       const cooked = "\n" + formatter.run();
       ranges.push({
         start,
         end,
-        cooked
+        cooked,
       });
-    }
+    },
   });
   const rangesLen = ranges.length;
   return ranges

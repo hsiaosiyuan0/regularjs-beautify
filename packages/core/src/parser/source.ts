@@ -36,7 +36,7 @@ export class Source {
     this.file = file;
     this.ch = "";
     this.ofst = -1;
-    this.line = startLine || 1;
+    this.line = startLine;
     this.col = 0;
     this.isPeek = false;
     this.posStack = [];
